@@ -22,11 +22,9 @@
 # =============================================================================
 
 import argparse, sys
-from confluent_kafka import avro, KafkaError
-from confluent_kafka.admin import AdminClient, NewTopic
 from uuid import uuid4
-
-#import certifi
+from confluent_kafka import KafkaError
+from confluent_kafka.admin import AdminClient, NewTopic
 
 name_schema = """
     {
@@ -128,6 +126,10 @@ def parse_args():
                           dest="topic",
                           help="topic name",
                           required=True)
+    required.add_argument('-d',
+                          dest="duration",
+                          help="duration in minutes for script to run",
+                          required=True)
     args = parser.parse_args()
 
     return args
@@ -177,10 +179,10 @@ def create_topic(conf, topic):
     for topic, f in fs.items():
         try:
             f.result()  # The result itself is None
-            print("Topic {} created".format(topic))
+            print(f"Topic {topic} created")
         except Exception as e:
             # Continue if error code TOPIC_ALREADY_EXISTS, which may be true
             # Otherwise fail fast
             if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
-                print("Failed to create topic {}: {}".format(topic, e))
+                print(f"Failed to create topic {topic}: {e}")
                 sys.exit(1)
