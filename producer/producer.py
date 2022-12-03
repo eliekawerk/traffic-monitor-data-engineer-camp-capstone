@@ -2,7 +2,7 @@ import os
 os.environ['CONDA_DLL_SEARCH_MODIFICATION_ENABLE']='1'
 
 from faker import Faker
-from faker.providers import *
+from faker.providers import DynamicProvider
 from faker_vehicle import VehicleProvider
 from datetime import datetime, timedelta
 from confluent_kafka.cimpl import Producer
