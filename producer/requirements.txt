@@ -13,6 +13,6 @@ pyrsistent==0.18.1
 requests==2.27.1
 urllib3==1.26.8
 zipp==3.7.0
-Faker==6.6.2
+Faker==15.3.3
 faker-vehicle==0.2.0
 kafka-python
