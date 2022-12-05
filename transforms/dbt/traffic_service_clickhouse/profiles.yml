@@ -1,0 +1,19 @@
+traffic_service_clickhouse:
+  target: dev
+  outputs:
+    dev:
+      type: clickhouse
+      schema: default
+      user: default
+      password: bBqHddKlgoPq
+      #optional fields
+      driver: http
+      port: 8443
+      host: bxkvef205u.ap-southeast-1.aws.clickhouse.cloud
+      retries: 1
+      connect_timeout: 10
+      send_receive_timeout: 300
+      sync_request_timeout: 5
+      compress_block_size: 1048576
+      database_engine: MergeTree
+      secure: True
