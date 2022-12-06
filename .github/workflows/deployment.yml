@@ -42,7 +42,8 @@ jobs:
           ref: main
       
       # deploy dbt project
-      - name: generate dbt manifest 
+      - name: deploy dbt project 
         run: | 
           cd transforms/dbt/traffic_service_clickhouse
+          dbt deps
           dbt run
