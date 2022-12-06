@@ -28,7 +28,7 @@ jobs:
       - name: install dependencies 
         run: |
           python -m pip install --upgrade pip
-          getcwd()
+          pwd
           pip install -r transform/dbt/requirements.txt
       
       # install dbt packages
