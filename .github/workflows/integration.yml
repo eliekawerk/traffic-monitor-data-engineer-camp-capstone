@@ -7,7 +7,7 @@ env:
   CH_HOST: ${{ secrets.CH_HOST }}
   CH_DB_USER: ${{ secrets.CH_DB_USER }}
   CH_DB_SCHEMA: ${{ secrets.CH_DB_SCHEMA }}
-  CH_DB_PASSWORD: ${{ secrets.CH_DB_PASSWORD }
+  CH_DB_PASSWORD: ${{ secrets.CH_DB_PASSWORD }}
   GH_REF: ${{ github.ref }} 
 
 jobs: 
