@@ -30,12 +30,12 @@ jobs:
           python -m pip install --upgrade pip
           pwd
           ls
-          pip install -r transform/dbt/requirements.txt
+          pip install -r transforms/dbt/requirements.txt
       
       # install dbt packages
       - name: dbt deps
         run: |
-          cd transform/dbt/traffic_service_clickhouse
+          cd transforms/dbt/traffic_service_clickhouse
           dbt deps
 
       # checkout to main 
@@ -47,7 +47,7 @@ jobs:
       # generate dbt manifest.json
       - name: generate dbt manifest 
         run: | 
-          cd transform/dbt/traffic_service_clickhouse
+          cd transforms/dbt/traffic_service_clickhouse
           dbt deps
           dbt compile --target dev
       
@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with: 
           name: manifest.json
-          path: transform/dbt/traffic_service_clickhouse/target/manifest.json
+          path: transforms/dbt/traffic_service_clickhouse/target/manifest.json
 
       # checkout back to current branch 
       - name: checkout to current branch 
@@ -66,12 +66,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: manifest.json
-          path: transform/dbt/traffic_service_clickhouse
+          path: transforms/dbt/traffic_service_clickhouse
 
       # dbt run and test
       - name: dbt run and test
         run: | 
-          cd transform/dbt/traffic_service_clickhouse
+          cd transforms/dbt/traffic_service_clickhouse
           dbt deps
           dbt run -m state:modified+1 --defer --state . --target dev
           dbt test -m state:modified+1 --defer --state . --target dev

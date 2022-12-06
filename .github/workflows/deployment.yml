@@ -27,12 +27,12 @@ jobs:
       - name: install dependencies 
         run: |
           python -m pip install --upgrade pip
-          pip install -r transform/dbt/requirements.txt
+          pip install -r transforms/dbt/requirements.txt
       
       # install dbt packages
       - name: dbt deps
         run: |
-          cd transform/dbt/traffic_service_clickhouse
+          cd transforms/dbt/traffic_service_clickhouse
           dbt deps
 
       # checkout to main 
@@ -44,5 +44,5 @@ jobs:
       # deploy dbt project
       - name: generate dbt manifest 
         run: | 
-          cd transform/dbt/traffic_service_clickhouse
+          cd transforms/dbt/traffic_service_clickhouse
           dbt run
