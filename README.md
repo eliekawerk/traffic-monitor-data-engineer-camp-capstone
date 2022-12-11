@@ -35,4 +35,4 @@ This project used the Faker library as a base to improve upon the practicality o
 The data is ingested in the ELT technique into Clickhouse where the data is transformed through raw/staging/serving layers via dbt modelling. This dbt project is run via GitHub actions. The serving layers are intended for output to Preset Dashboards for consumption by end users.
 
 ## Results
-<Preset dashboards>
+:Preset dashboards:
