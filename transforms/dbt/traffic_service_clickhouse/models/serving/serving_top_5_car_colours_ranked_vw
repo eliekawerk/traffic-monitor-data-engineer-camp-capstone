@@ -4,7 +4,7 @@ WITH cte_car_make_count AS (
     SELECT
         colour,
         COUNT(*)                        AS car_counts
-    FROM staging_traffic_vw
+    FROM {{ ref('staging_traffic_vw') }}
     GROUP BY colour
 )
 SELECT
@@ -12,4 +12,5 @@ SELECT
     car_counts,
     RANK() OVER (ORDER BY car_counts DESC) AS rank_of_car_colours
 FROM cte_car_make_count
+
 LIMIT 5

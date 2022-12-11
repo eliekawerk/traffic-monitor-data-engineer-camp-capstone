@@ -11,5 +11,6 @@ SELECT
     make,
     car_counts,
     RANK() OVER (ORDER BY car_counts DESC) AS rank_of_car_makes
-FROM cte_car_make_count
+--FROM cte_car_make_count
+FROM {{ ref('staging_traffic_vw') }}
 LIMIT 5
