@@ -5,4 +5,4 @@ SELECT
     travel_direction,    
     colour
 FROM staging_traffic_vw
-where colour in ('white', 'black', 'silver')
+where colour in ('white', 'black', 'sliver')
