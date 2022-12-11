@@ -7,5 +7,5 @@ SELECT
     colour,
     make, 
     count(*)                AS car_count
-FROM staging_traffic_vw
+FROM {{ ref('staging_traffic_vw') }}
 GROUP BY date, travel_direction, fuel_type, colour, make

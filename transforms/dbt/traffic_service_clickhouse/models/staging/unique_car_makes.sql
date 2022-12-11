@@ -4,4 +4,4 @@
     order_by = [ "Make" ]
 ) }}
 
-SELECT distinct Make from raw_traffic
+SELECT distinct Make from {{ source('default', 'raw_traffic') }}

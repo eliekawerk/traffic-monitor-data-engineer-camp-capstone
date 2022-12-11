@@ -22,4 +22,4 @@
         rt.passenger_count,
         rt.travel_direction,
         rt.speed AS speed_in_km_per_hour
-    FROM raw_traffic AS rt
+    FROM {{ source('default', 'raw_traffic') }} AS rt

@@ -4,7 +4,7 @@ WITH cte_car_make_count AS (
     SELECT
         make,
         COUNT(*)                AS car_counts
-    FROM staging_traffic_vw
+    FROM {{ ref('staging_traffic_vw') }}
     GROUP BY travel_direction, make
 )
 SELECT
