@@ -31,5 +31,8 @@ The live data source is generated using a python library called Faker which will
 
 This project used the Faker library as a base to improve upon the practicality of the data, for example allowing for fluctuations of traffic amounts and speed during peak hours.
 
+## Transformations
+The data is ingested in the ELT technique into Clickhouse where the data is transformed through raw/staging/serving layers via dbt modelling. This dbt project is run via GitHub actions. The serving layers are intended for output to Preset Dashboards for consumption by end users.
+
 ## Results
 <Preset dashboards>
