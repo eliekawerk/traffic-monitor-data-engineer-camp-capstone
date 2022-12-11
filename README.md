@@ -36,3 +36,20 @@ The data is ingested in the ELT technique into Clickhouse where the data is tran
 
 ## Results
 :Preset dashboards:
+
+```
+CREATE TABLE IF NOT EXISTS default.raw_traffic
+(
+    Year                UInt32,
+    Make                LowCardinality(String),
+    Model               String,
+    Category            LowCardinality(String),
+    license_plate       String,
+    colour              Enum('white' = 1, 'sliver' = 2, 'black' = 3, 'red' = 4, 'blue' = 5, 'yellow' = 6, 'green' = 7),
+    fuel_type           Enum('electric' = 1,'petrol' = 2,'diesel' = 3),
+    passenger_count     UInt32,
+    travel_direction    Enum('Northbound' = 1,'Westbound' = 2,'Southbound' = 3, 'Eastbound' = 4),
+    speed               UInt32,
+    datetimestamp       String
+) ENGINE = MergeTree ORDER BY (license_plate, Year, Make, Model, datetimestamp)
+```
