@@ -13,6 +13,7 @@ It is entirely cloud-hosted, and includes the components shown in the diagram be
 * Reporting - Preset Dashboards
 * CI/CD via Github actions
 
+# Project Summary
 ## Use-case 
 The data will be used to monitor traffic in real-time and for analysis to manage speed and help mitigate congestion on the roads.
 
@@ -34,6 +35,18 @@ This project used the Faker library as a base to improve upon the practicality o
 ## Transformations
 The data is ingested in the ELT technique into Clickhouse where the data is transformed through raw/staging/serving layers via dbt modelling. This dbt project is run via GitHub actions. The serving layers are intended for output to Preset Dashboards for consumption by end users.
 
+## Reporting
+As part of the project, there are live dashboards created in Preset which utilise the serving layer in Clickhouse. See the results section below for more details.
+
+# Notes
+
+## EC2 Instance
+To install the Python based Kafka producer on EC2 and instructions on running it, see <br> https://github.com/aananth1/DE-Capstone-2022/blob/main/data-ingestion/kafka/producer/README.md
+
+Kafka Producer running on EC2:
+![image (1)](https://user-images.githubusercontent.com/106643739/206933645-82f17810-5b99-47b1-94bb-919aa42c2870.png)
+
+## Clickhouse setup
 If you are running this project from scratch, run this script on Clickhouse to set up the raw table:
 
 ```
