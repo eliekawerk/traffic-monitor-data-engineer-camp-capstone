@@ -15,5 +15,5 @@ pip3 install -r requirements.txt
 ## Run the producer
 
 ```
-python producer.py -f confluent.config -t traffic -d <duration_to_run_script_for_in_seconds>
+python producer.py -f confluent.config -t traffic -d <duration_to_run_script_for_in_minutes>
 ```
