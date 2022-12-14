@@ -10,7 +10,7 @@ env:
   GH_REF: ${{ github.ref }} 
 
 jobs:
-  build: 
+  dbt-test:
     runs-on: ubuntu-latest
     steps: 
       # git checkout 
