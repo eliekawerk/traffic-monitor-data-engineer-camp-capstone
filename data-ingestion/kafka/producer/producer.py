@@ -80,16 +80,16 @@ def run_producer():
         # # Creating the low level functional client
         # client = boto3.client(
         #     's3',
-        #     aws_access_key_id = 'AKIAYB3ZZTCSZVNFOSLT',
-        #     aws_secret_access_key = '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',
+        #     aws_access_key_id = '',
+        #     aws_secret_access_key = '',
         #     region_name = 'ap-southeast-2'
         # )
             
         # # Creating the high level object oriented interface
         # s3= boto3.resource(
         #     's3',
-        #     aws_access_key_id = 'AKIAYB3ZZTCSZVNFOSLT',
-        #     aws_secret_access_key = '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',
+        #     aws_access_key_id = '',
+        #     aws_secret_access_key = '',
         #     region_name = 'ap-southeast-2'
         # )
 
@@ -134,8 +134,8 @@ def run_producer():
 
 
         # s3 = client('s3', 
-        #     aws_access_key_id = 'AKIAYB3ZZTCS7H2ETNW4',
-        #     aws_secret_access_key= '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',
+        #     aws_access_key_id = '',
+        #     aws_secret_access_key= '',
         #     region_name='ap-northeast-1'
         #     )
 
