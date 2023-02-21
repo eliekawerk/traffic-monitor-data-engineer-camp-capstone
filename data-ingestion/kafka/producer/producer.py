@@ -4,9 +4,6 @@ import random
 import time
 import json
 import logging
-# import s3fs
-# import boto3
-# import pandas as pd
 from datetime import datetime, timedelta
 from faker import Faker
 from faker_vehicle import VehicleProvider
