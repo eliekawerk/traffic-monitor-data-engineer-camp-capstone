@@ -66,7 +66,6 @@ class Name(object):
         """
         return dict(name=self.name)
 
-
 # Schema used for serializing Count class, passed in as the Kafka value
 count_schema = """
     {
@@ -78,7 +77,6 @@ count_schema = """
         ]
     }
 """
-
 
 class Count(object):
     """
@@ -109,7 +107,6 @@ class Count(object):
         """
         return dict(count=self.count)
 
-
 def parse_args():
     """Parse command line arguments"""
 
@@ -134,7 +131,6 @@ def parse_args():
 
     return args
 
-
 def read_ccloud_config(config_file):
     """Read Confluent Cloud configuration for librdkafka clients"""
 
@@ -146,10 +142,7 @@ def read_ccloud_config(config_file):
                 parameter, value = line.strip().split('=', 1)
                 conf[parameter] = value.strip()
 
-    #conf['ssl.ca.location'] = certifi.where()
-
     return conf
-
 
 def pop_schema_registry_params_from_config(conf):
     """Remove potential Schema Registry related configurations from dictionary"""
@@ -159,7 +152,6 @@ def pop_schema_registry_params_from_config(conf):
     conf.pop('basic.auth.credentials.source', None)
 
     return conf
-
 
 def create_topic(conf, topic):
     """
@@ -176,6 +168,7 @@ def create_topic(conf, topic):
          num_partitions=1,
          replication_factor=3
     )])
+
     for topic, f in fs.items():
         try:
             f.result()  # The result itself is None

@@ -4,11 +4,16 @@ import random
 import time
 import json
 import logging
+# import s3fs
+# import boto3
+# import pandas as pd
 from datetime import datetime, timedelta
 from faker import Faker
 from faker_vehicle import VehicleProvider
 from confluent_kafka.cimpl import Producer
 from utility import ccloud_lib, dynamic_faker_providers
+
+
 
 
 def run_producer():
@@ -26,6 +31,7 @@ def run_producer():
             "fuel_type": fake.car_fuel_type(),
             "passenger_count": fake.car_passengers_count(),
             "travel_direction": fake.car_travel_direction(),
+            "lane": fake.car_lane(),
             "speed": int(random.randint(50,90) + speed_factor),
             "datetimestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f")
         }
@@ -54,14 +60,124 @@ def run_producer():
         config_file = args.config_file
         topic = args.topic
         duration_in_minutes = int(args.duration)
-        conf = ccloud_lib.read_ccloud_config(config_file)
+        config = ccloud_lib.read_ccloud_config(config_file)
 
         # Create Producer instance
-        producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
-        producer = Producer(producer_conf)
+        config = ccloud_lib.pop_schema_registry_params_from_config(config)
+
+        # s3 = client('s3', 
+        #     aws_access_key_id = aws_access_id,
+        #     aws_secret_access_key= aws_secret_key,
+        #     region_name= aws_region   
+        #     )
+
+        # fs = s3fs.S3FileSystem(anon=True)
+        # fs.ls('traffic-monitor-env-s3-bucket')
+        # with fs.open('traffic-monitor-env-s3-bucket/.env', 'rb') as f:
+        #     print(f.read())
+
+
+        # # Creating the low level functional client
+        # client = boto3.client(
+        #     's3',
+        #     aws_access_key_id = 'AKIAYB3ZZTCSZVNFOSLT',
+        #     aws_secret_access_key = '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',
+        #     region_name = 'ap-southeast-2'
+        # )
+            
+        # # Creating the high level object oriented interface
+        # s3= boto3.resource(
+        #     's3',
+        #     aws_access_key_id = 'AKIAYB3ZZTCSZVNFOSLT',
+        #     aws_secret_access_key = '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',
+        #     region_name = 'ap-southeast-2'
+        # )
+
+        # Fetch the list of existing buckets
+        # clientResponse = client.list_buckets()
+            
+        # Print the bucket names one by one
+        # print('Printing bucket names...')
+        # for bucket in clientResponse['Buckets']:
+        #     print(f'Bucket Name: {bucket["Name"]}')
+
+        # my_bucket = s3.Bucket('traffic-monitor-env-s3-bucket')
+        # print('print response')
+        # response = client.get_object(Bucket='traffic-monitor-env-s3-bucket', Key='.env')
+        # print('print status: ')
+        # status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
+        # get_dates = pd.read_csv(response.get("Body"))
+
+        # print(status)
+
+        # for my_bucket_object in my_bucket.objects.all():
+        #     print(my_bucket_object.key)
+
+        # read file content 
+        # raw_content = my_bucket.Object(key=".env").get()
+        # raw_content = my_bucket.Object(key=".env").get().get('Body').read().decode('utf-8')
+        # print('print raw content')
+        # print(raw_content)
+
+        # # Create the S3 object
+        # obj = resource.get_object(
+        #     Bucket = 'traffic-monitor-env-s3-bucket',
+        #     Key = '.env'
+        # )
+            
+        # # Read data from the S3 object
+        # data = pd.read_csv(obj['Body'])
+            
+        # Print the data frame
+        # print('Printing the data frame...')
+        # print(data)
+
+
+        # s3 = client('s3', 
+        #     aws_access_key_id = 'AKIAYB3ZZTCS7H2ETNW4',
+        #     aws_secret_access_key= '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',
+        #     region_name='ap-northeast-1'
+        #     )
+
+        # path='s3://traffic-monitor-env-s3-bucket/.env'
+        # print('passed this point')
+        # df=pd.read_csv(path)
+        # print("df was able to read file")
+        # print(df.head())
+
+        # response = s3.get_object(Bucket=aws_bucket, Key=aws_log_file)
+        # status = response.get("ResponseMetadata", {}).get("HTTPStatusCode")
+        
+        # if status == 200:
+            
+        #     logging.info(f"Successfully request and read from S3. Status - {status}")
+        #     get_dates = pd.read_csv(response.get("Body"))
+        #     try:
+        #         latest_date = get_dates[get_dates["incremental_value"]== get_dates["incremental_value"].max()]["incremental_value"].values[0]
+        #         return latest_date
+        #     except:
+        #         return None
+
+        # else:
+        #     logging.error(f"Request to get object from S3 has failed. Status - {status}")    
+
+        config_env_params = {
+            'bootstrap.servers': os.environ.get('server'),
+            'sasl.username': os.environ.get('username'),
+            'sasl.password': os.environ.get('password'),
+        }
+
+        # print(config_env_params)
+
+        # Add env params to config
+        config = dict(config, **config_env_params)
+        
+        print(config)
+
+        producer = Producer(config)
 
         # Create topic if needed
-        ccloud_lib.create_topic(conf, topic)
+        ccloud_lib.create_topic(config, topic)
 
         # Instanciate faker
         fake = Faker()
@@ -71,6 +187,7 @@ def run_producer():
         fake.add_provider(dynamic_faker_providers.car_fuel_type_provider)
         fake.add_provider(dynamic_faker_providers.car_passengers_count_provider)
         fake.add_provider(dynamic_faker_providers.car_travel_direction_provider)
+        fake.add_provider(dynamic_faker_providers.car_lane)
         fake.add_provider(VehicleProvider)
 
         # Set run end time

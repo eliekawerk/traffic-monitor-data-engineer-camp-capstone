@@ -13,10 +13,15 @@ car_fuel_type_provider = DynamicProvider(
 
 car_passengers_count_provider = DynamicProvider(
      provider_name="car_passengers_count",
-     elements=[1, 2, 3, 4, 5]
+     elements=[1, 2, 3, 4]
 )
 
 car_travel_direction_provider = DynamicProvider(
      provider_name="car_travel_direction",
-     elements=["Northbound", "Southbound", "Eastbound", "Westbound"]
+     elements=["Northbound", "Southbound"]
+)
+
+car_lane = DynamicProvider(
+     provider_name="car_lane",
+     elements=[1,2,3]
 )
