@@ -30,7 +30,7 @@ def run_producer():
             "travel_direction": fake.car_travel_direction(),
             "lane": fake.car_lane(),
             "speed": int(random.randint(50,90) + speed_factor),
-            "datetimestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S.%f")
+            "datetimestamp": (datetime.utcnow() + timedelta(hours=+8)).strftime("%d/%m/%Y %H:%M:%S.%f")
         }
 
     def acked(err, msg):
