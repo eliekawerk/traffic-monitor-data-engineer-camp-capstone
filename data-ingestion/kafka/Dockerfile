@@ -1,5 +1,8 @@
 FROM python:3.9 
 
+RUN adduser -D myuser
+USER myuser
+
 WORKDIR /producer
 
 COPY /producer . 
