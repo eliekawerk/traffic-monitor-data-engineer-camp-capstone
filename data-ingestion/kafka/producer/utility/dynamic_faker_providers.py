@@ -3,7 +3,7 @@ from faker.providers import DynamicProvider
 # Prepare additional faker providers
 car_colour_provider = DynamicProvider(
     provider_name="car_colour",
-    elements=["white", "sliver", "black", "red", "blue", "yellow", "green"],
+    elements=["white", "silver", "black", "red", "blue", "yellow", "green"],
 )
 
 car_fuel_type_provider = DynamicProvider(
