@@ -216,7 +216,7 @@ def generate_random_car_object(speed_factor: int) -> object:
     return car_object
 
 
-def object_to_dict(car_object: object) -> dict:
+def object_to_dict(car_object: object, ctx) -> dict:
     """
     Fucntion to returns a dict representation of a Car instance for serialization.
     """
