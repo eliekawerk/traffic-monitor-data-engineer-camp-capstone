@@ -1,4 +1,5 @@
 import os
+
 # os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"]="1"
 import random
 import time
@@ -6,10 +7,11 @@ import logging
 from uuid import uuid4
 from datetime import datetime, timedelta
 from confluent_kafka import Producer
-from confluent_kafka.serialization import StringSerializer, SerializationContext, MessageField
+from confluent_kafka.serialization import SerializationContext, MessageField
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.json_schema import JSONSerializer
 from utility import ccloud_lib as ccloud
+
 
 def run_producer():
     """
@@ -18,8 +20,8 @@ def run_producer():
 
     # Setup logging
     logging.basicConfig(
-        # format="[%(levelname)s][%(asctime)s][%(filename)s]: %(message)s", level=logging.INFO)
-        format="[%(levelname)s][%(asctime)s]: %(message)s", level=logging.INFO)
+        format="[%(levelname)s][%(asctime)s]: %(message)s", level=logging.INFO
+    )
 
     try:
 
@@ -30,34 +32,27 @@ def run_producer():
         config_file = args.config_file
         topic = args.topic
         duration_in_minutes = int(args.duration)
-        
+
         ccloud_config = ccloud.read_ccloud_config(config_file)
 
         ccloud_config_env_params = {
             "bootstrap.servers": os.environ.get("bootstrap_servers"),
             "sasl.username": os.environ.get("sasl_username"),
-            "sasl.password": os.environ.get("sasl_password")
+            "sasl.password": os.environ.get("sasl_password"),
         }
-
-        print(ccloud_config_env_params)
 
         schema_registry_env_params = {
-            # "basic.auth.credentials.source": os.environ.get("basic_auth_credentials_source"),
             "basic.auth.user.info": os.environ.get("basic_auth_user_info"),
-            "schema.registry.url": os.environ.get("schema_registry_url")
+            "schema.registry.url": os.environ.get("schema_registry_url"),
         }
-
-        print(schema_registry_env_params)
 
         # Add env params to ccloud config dictionary
         config = dict(ccloud_config, **ccloud_config_env_params)
 
-        print(config)
-
         schema_registry_config = {
-            "url": schema_registry_env_params["schema.registry.url"], 
-            "basic.auth.user.info":schema_registry_env_params["basic.auth.user.info"]
-            }
+            "url": schema_registry_env_params["schema.registry.url"],
+            "basic.auth.user.info": schema_registry_env_params["basic.auth.user.info"],
+        }
         schema_registry_client = SchemaRegistryClient(schema_registry_config)
 
         # Create producer
@@ -76,7 +71,9 @@ def run_producer():
             if datetime.now().weekday() in [0, 1, 2, 3, 4]:
                 # print("Weekday")
                 # Peak
-                if (datetime.now().hour >= 6 and datetime.now().hour <= 7) or (datetime.now().hour >= 16 and datetime.now().hour <= 17):
+                if (datetime.now().hour >= 6 and datetime.now().hour <= 7) or (
+                    datetime.now().hour >= 16 and datetime.now().hour <= 17
+                ):
                     time_delay = random.randint(50, 90)
                     speed_factor = random.uniform(-20, 10)
                     # print("Peak")
@@ -96,7 +93,7 @@ def run_producer():
             # Weekend
             else:
                 # print("Weekend")
-                if (datetime.now().hour >= 9 and datetime.now().hour <= 18):
+                if datetime.now().hour >= 9 and datetime.now().hour <= 18:
                     time_delay = random.randint(1, 70)
                     speed_factor = random.uniform(-10, 10)
 
@@ -108,20 +105,26 @@ def run_producer():
             car_object = ccloud.generate_random_car_object(speed_factor=speed_factor)
 
             # string_serializer = StringSerializer("utf_8")
-            json_serializer = JSONSerializer(schema_str=ccloud.schema_str, schema_registry_client=schema_registry_client, to_dict=ccloud.object_to_dict)
+            json_serializer = JSONSerializer(
+                schema_str=ccloud.schema_str,
+                schema_registry_client=schema_registry_client,
+                to_dict=ccloud.object_to_dict,
+            )
 
             producer.poll(0)
 
             # Send to confluent cloud topic
             producer.produce(
-                topic=topic, 
+                topic=topic,
                 key=str(uuid4()),
-                value=json_serializer(car_object, SerializationContext(topic, MessageField.VALUE)),
-                on_delivery=ccloud.delivery_report
-                )
-            
+                value=json_serializer(
+                    car_object, SerializationContext(topic, MessageField.VALUE)
+                ),
+                on_delivery=ccloud.delivery_report,
+            )
+
             # Time delay between car objects being created
-            time.sleep(time_delay * 0.1)
+            time.sleep(time_delay * 0.02)
 
         producer.flush()
         logging.info(f"Producer has finished.")
@@ -129,6 +132,6 @@ def run_producer():
     except Exception as e:
         logging.exception(f"An exception occured: {e}")
 
+
 if __name__ == "__main__":
-    delivered_records = 0
     run_producer()
