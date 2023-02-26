@@ -1,94 +1,64 @@
 import os
-# os.environ['CONDA_DLL_SEARCH_MODIFICATION_ENABLE']='1'
+# os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"]="1"
 import random
 import time
-import json
 import logging
+from uuid import uuid4
 from datetime import datetime, timedelta
-from faker import Faker
-from faker_vehicle import VehicleProvider
-from confluent_kafka.cimpl import Producer
-from utility import ccloud_lib, dynamic_faker_providers
-
-
-
+from confluent_kafka import Producer
+from confluent_kafka.serialization import StringSerializer, SerializationContext, MessageField
+from confluent_kafka.schema_registry import SchemaRegistryClient
+from confluent_kafka.schema_registry.json_schema import JSONSerializer
+from utility import ccloud_lib as ccloud
 
 def run_producer():
     """
-    Function to run the kafka producer and push data to confluent.
+    Function to run the kafka producer and push data to confluent cloud.
     """
-
-    def generate_random_car_attributes(speed_factor:int)->dict:
-        """
-        Function to generate additional car attributes object with random attributes.
-        """
-        return {
-            "license_plate": fake.license_plate(),
-            "colour": fake.car_colour(),
-            "fuel_type": fake.car_fuel_type(),
-            "passenger_count": fake.car_passengers_count(),
-            "travel_direction": fake.car_travel_direction(),
-            "lane": fake.car_lane(),
-            "speed": int(random.randint(50,90) + speed_factor),
-            "datetimestamp": (datetime.utcnow() + timedelta(hours=+8)).strftime("%d/%m/%Y %H:%M:%S.%f")
-        }
-
-    def acked(err, msg):
-        """
-        Delivery report handler called on successful or failed delivery of message.
-        """
-        global delivered_records
-
-        if err is not None:
-            logging.warning(f"Failed to deliver message: {err}")
-        else:
-            delivered_records += 1
 
     # Setup logging
     logging.basicConfig(
-        format="[%(levelname)s][%(asctime)s][%(filename)s]: %(message)s", level=logging.INFO)
+        # format="[%(levelname)s][%(asctime)s][%(filename)s]: %(message)s", level=logging.INFO)
+        format="[%(levelname)s][%(asctime)s]: %(message)s", level=logging.INFO)
 
     try:
 
-        logging.info('Producer has started.')
+        logging.info("Producer has started.")
 
         # Read arguments and configurations and initialize
-        args = ccloud_lib.parse_args()
+        args = ccloud.parse_args()
         config_file = args.config_file
         topic = args.topic
         duration_in_minutes = int(args.duration)
-        config = ccloud_lib.read_ccloud_config(config_file)
+        
+        ccloud_config = ccloud.read_ccloud_config(config_file)
 
-        # Create Producer instance
-        config = ccloud_lib.pop_schema_registry_params_from_config(config)
-
-       
-        config_env_params = {
-            'bootstrap.servers': os.environ.get('server'),
-            'sasl.username': os.environ.get('username'),
-            'sasl.password': os.environ.get('password'),
+        ccloud_config_env_params = {
+            "bootstrap.servers": os.environ.get("bootstrap_servers"),
+            "sasl.username": os.environ.get("sasl_username"),
+            "sasl.password": os.environ.get("sasl_password")
         }
 
-        # Add env params to config dictionary
-        config = dict(config, **config_env_params)
-        
-        print(config)
+        schema_registry_env_params = {
+            # "basic.auth.credentials.source": os.environ.get("basic_auth_credentials_source"),
+            "basic.auth.user.info": os.environ.get("basic_auth_user_info"),
+            "schema.registry.url": os.environ.get("schema_registry_url")
+        }
 
+        # Add env params to ccloud config dictionary
+        config = dict(ccloud_config, **ccloud_config_env_params)
+
+        schema_registry_config = {
+            "url": schema_registry_env_params["schema.registry.url"], 
+            "basic.auth.user.info":schema_registry_env_params["basic.auth.user.info"]
+            }
+        schema_registry_client = SchemaRegistryClient(schema_registry_config)
+
+        # Create producer
         producer = Producer(config)
 
         # Create topic if needed
-        ccloud_lib.create_topic(config, topic)
-
-        # Instanciate faker
-        fake = Faker()
-
-        # Add dynamic providers to faker
-        fake.add_provider(dynamic_faker_providers.car_colour_provider)
-        fake.add_provider(dynamic_faker_providers.car_fuel_type_provider)
-        fake.add_provider(dynamic_faker_providers.car_passengers_count_provider)
-        fake.add_provider(dynamic_faker_providers.car_travel_direction_provider)
-        fake.add_provider(dynamic_faker_providers.car_lane)
-        fake.add_provider(VehicleProvider)
+        ccloud.create_topic(config, topic)
 
         # Set run end time
         end_datetime = datetime.now() + timedelta(minutes=duration_in_minutes)
@@ -98,28 +68,28 @@ def run_producer():
 
             # Weekday
             if datetime.now().weekday() in [0, 1, 2, 3, 4]:
-                # print('Weekday')
+                # print("Weekday")
                 # Peak
                 if (datetime.now().hour >= 6 and datetime.now().hour <= 7) or (datetime.now().hour >= 16 and datetime.now().hour <= 17):
                     time_delay = random.randint(50, 90)
                     speed_factor = random.uniform(-20, 10)
-                    # print('Peak')
+                    # print("Peak")
 
                 # Off-peak
                 elif datetime.now().hour <= 4 or datetime.now().hour >= 22:
                     time_delay = random.randint(80, 100)
                     speed_factor = random.uniform(0, 30)
-                    # print('Off Peak')
+                    # print("Off Peak")
 
                 # Shoulder
                 else:
                     time_delay = random.randint(1, 70)
                     speed_factor = random.uniform(-10, 20)
-                    # print('Shoulder')
+                    # print("Shoulder")
 
             # Weekend
             else:
-                # print('Weekend')
+                # print("Weekend")
                 if (datetime.now().hour >= 9 and datetime.now().hour <= 18):
                     time_delay = random.randint(1, 70)
                     speed_factor = random.uniform(-10, 10)
@@ -128,25 +98,31 @@ def run_producer():
                     time_delay = random.randint(70, 100)
                     speed_factor = random.uniform(0, 30)
 
-            car = fake.vehicle_object()
-            car_attributes = generate_random_car_attributes(speed_factor=speed_factor)
+            # Create car object
+            car_object = ccloud.generate_random_car_object(speed_factor=speed_factor)
 
-            # Join car and attributes into one dictionary
-            car_object = dict(car, **car_attributes)
-            logging.info(car_object)
+            # string_serializer = StringSerializer("utf_8")
+            json_serializer = JSONSerializer(schema_str=ccloud.schema_str, schema_registry_client=schema_registry_client, to_dict=ccloud.object_to_dict)
 
-            producer.produce(topic, key=car_object['license_plate'], value=json.dumps(car_object), on_delivery=acked)
             producer.poll(0)
 
+            # Send to confluent cloud topic
+            producer.produce(
+                topic=topic, 
+                key=str(uuid4()),
+                value=json_serializer(car_object, SerializationContext(topic, MessageField.VALUE)),
+                on_delivery=ccloud.delivery_report
+                )
+            
             # Time delay between car objects being created
             time.sleep(time_delay * 0.1)
 
         producer.flush()
-        logging.info(f'Producer has finished. {delivered_records} messages were produced to topic: {topic}!')
+        logging.info(f"Producer has finished.")
 
     except Exception as e:
-        logging.exception(f'{delivered_records} messages were produced to topic: {topic}, before throughing exception: {e}')
+        logging.exception(f"An exception occured: {e}")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     delivered_records = 0
     run_producer()
