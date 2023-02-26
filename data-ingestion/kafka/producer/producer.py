@@ -39,14 +39,20 @@ def run_producer():
             "sasl.password": os.environ.get("sasl_password")
         }
 
+        print(ccloud_config_env_params)
+
         schema_registry_env_params = {
             # "basic.auth.credentials.source": os.environ.get("basic_auth_credentials_source"),
             "basic.auth.user.info": os.environ.get("basic_auth_user_info"),
             "schema.registry.url": os.environ.get("schema_registry_url")
         }
 
+        print(schema_registry_env_params)
+
         # Add env params to ccloud config dictionary
         config = dict(ccloud_config, **ccloud_config_env_params)
+
+        print(config)
 
         schema_registry_config = {
             "url": schema_registry_env_params["schema.registry.url"], 
