@@ -124,7 +124,7 @@ def run_producer():
             )
 
             # Time delay between car objects being created
-            time.sleep(time_delay * 0.02)
+            time.sleep(time_delay * 0.03)
 
         producer.flush()
         logging.info(f"Producer has finished.")
