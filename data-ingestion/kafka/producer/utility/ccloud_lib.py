@@ -210,7 +210,7 @@ def generate_random_car_object(speed_factor: int) -> object:
         speed=int(random.randint(50, 90) + speed_factor),
         datetimestamp=(datetime.utcnow() + timedelta(hours=+8)).strftime(
             "%d/%m/%Y %H:%M:%S.%f"
-        ),
+        )
     )
 
     return car_object
