@@ -40,7 +40,10 @@ jobs:
 
       # run sqlfluff linting
       - name: sql linting
-        run: sqlfluff lint traffic_monitor   
+        run: |
+        pwd
+        ls
+        sqlfluff lint traffic_monitor   
 
       # # checkout to main 
       # - name: checkout to main
