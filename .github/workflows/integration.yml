@@ -1,4 +1,5 @@
 name: integration
+#trigger on
 on:
   pull_request:
     branches: [ main ]
@@ -11,32 +12,34 @@ env:
   GH_REF: ${{ github.ref }} 
 
 jobs: 
-  build-test: 
+  build-test:  # your custom name
     runs-on: ubuntu-latest
     steps: 
-      # git checkout 
-      - name: checkout code
+      # git checkout code to the machine
+      - name: checkout code # custome name
         uses: actions/checkout@v3
       
-      # set up python version 
+      # install python version 
       - name: set up python 
         uses: actions/setup-python@v4
         with: 
-          python-version: 3.10.8
+          python-version: 3.9
 
-      # # install python dependencies 
+      # install python dependencies 
       - name: install dependencies 
         run: |
           python -m pip install --upgrade pip
-          pwd
-          ls
-          pip install -r transforms/dbt/requirements.txt
+          pip install -r data-transformations/dbt/requirements.txt
       
       # install dbt packages
       - name: dbt deps
         run: |
-          cd transforms/dbt/traffic_service_clickhouse
+          cd transforms/dbt/traffic_service
           dbt deps
+
+      # run sqlfluff linting
+      - name: sql linting
+        run: sqlfluff lint traffic_monitor   
 
       # checkout to main 
       - name: checkout to main
