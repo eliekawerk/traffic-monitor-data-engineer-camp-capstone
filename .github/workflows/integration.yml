@@ -37,7 +37,15 @@ jobs:
         run: |
           pwd
           ls
-          cd data-transformation/dbt/traffic_service
+          cd data-transformation
+          pwd
+          ls
+          cd dbt
+          pwd
+          ls
+          cd traffic_service
+          pwd
+          ls
           dbt deps
 
       # run sqlfluff linting
