@@ -35,7 +35,7 @@ jobs:
       # install dbt packages
       - name: dbt deps
         run: |
-          cd transforms/dbt/traffic_service
+          cd data-transformation/dbt/traffic_service
           dbt deps
 
       # run sqlfluff linting
