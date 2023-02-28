@@ -1,8 +1,9 @@
 name: integration
 #trigger on
 on:
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: 
+  # pull_request:
+  #   branches: [ main ]
 
 env:
   CH_HOST: ${{ secrets.CH_HOST }}
@@ -41,40 +42,40 @@ jobs:
       - name: sql linting
         run: sqlfluff lint traffic_monitor   
 
-      # checkout to main 
-      - name: checkout to main
-        uses: actions/checkout@v3
-        with:
-          ref: main
+      # # checkout to main 
+      # - name: checkout to main
+      #   uses: actions/checkout@v3
+      #   with:
+      #     ref: main
       
-      # generate dbt manifest.json
-      - name: generate dbt manifest 
-        run: | 
-          cd transforms/dbt/traffic_service_clickhouse
-          dbt deps
-          dbt compile --target dev
+      # # generate dbt manifest.json
+      # - name: generate dbt manifest 
+      #   run: | 
+      #     cd transforms/dbt/traffic_service_clickhouse
+      #     dbt deps
+      #     dbt compile --target dev
       
-      # publish manifest.json
-      - name: upload dbt manifest 
-        uses: actions/upload-artifact@v3
-        with: 
-          name: manifest.json
-          path: transforms/dbt/traffic_service_clickhouse/target/manifest.json
+      # # publish manifest.json
+      # - name: upload dbt manifest 
+      #   uses: actions/upload-artifact@v3
+      #   with: 
+      #     name: manifest.json
+      #     path: transforms/dbt/traffic_service_clickhouse/target/manifest.json
 
-      # checkout back to current branch 
-      - name: checkout to current branch 
-        uses: actions/checkout@v3
+      # # checkout back to current branch 
+      # - name: checkout to current branch 
+      #   uses: actions/checkout@v3
 
-      # download manifest.json to current working directory 
-      - uses: actions/download-artifact@v3
-        with:
-          name: manifest.json
-          path: transforms/dbt/traffic_service_clickhouse
+      # # download manifest.json to current working directory 
+      # - uses: actions/download-artifact@v3
+      #   with:
+      #     name: manifest.json
+      #     path: transforms/dbt/traffic_service_clickhouse
 
-      # dbt run and test
-      - name: dbt run and test
-        run: | 
-          cd transforms/dbt/traffic_service_clickhouse
-          dbt deps
-          dbt run -m state:modified+1 --defer --state . --target dev
-          dbt test -m state:modified+1 --defer --state . --target dev
+      # # dbt run and test
+      # - name: dbt run and test
+      #   run: | 
+      #     cd transforms/dbt/traffic_service_clickhouse
+      #     dbt deps
+      #     dbt run -m state:modified+1 --defer --state . --target dev
+      #     dbt test -m state:modified+1 --defer --state . --target dev
