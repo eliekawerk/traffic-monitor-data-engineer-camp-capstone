@@ -38,12 +38,14 @@ jobs:
           cd data-transformation/dbt/traffic_monitor
           dbt deps
 
+      # show packages
+      - name: pip list
+        run: pip list
+
       # run sqlfluff linting
       - name: sql linting
         run: |
           cd data-transformation/dbt
-          pwd
-          ls
           sqlfluff lint traffic_monitor 
 
       # # checkout to main 
