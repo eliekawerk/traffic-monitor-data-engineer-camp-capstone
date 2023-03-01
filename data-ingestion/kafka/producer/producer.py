@@ -116,7 +116,7 @@ def run_producer():
             # Send to confluent cloud topic
             producer.produce(
                 topic=topic,
-                key=str(uuid4()),
+                key=str(car_object['license_plate']),
                 value=json_serializer(
                     car_object, SerializationContext(topic, MessageField.VALUE)
                 ),
