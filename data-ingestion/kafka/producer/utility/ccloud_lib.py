@@ -164,7 +164,7 @@ def create_topic(config, topic):
     admin_client_conf = pop_schema_registry_params_from_config(config.copy())
     a = AdminClient(admin_client_conf)
 
-    fs = a.create_topics([NewTopic(topic, num_partitions=2, replication_factor=3)])
+    fs = a.create_topics([NewTopic(topic, num_partitions=1, replication_factor=3)])
 
     for topic, f in fs.items():
         try:
@@ -216,7 +216,7 @@ def generate_random_car_object(speed_factor: int) -> object:
     return car_object
 
 
-def object_to_dict(car_object: object, ctx) -> dict:
+def object_to_dict(car_object: object, ctx=None) -> dict:
     """
     Fucntion to returns a dict representation of a Car instance for serialization.
     """
