@@ -1,11 +1,8 @@
 import os
-
-os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"]="1"
+# os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"]="1"
 import random
 import time
 import logging
-import json
-from uuid import uuid4
 from datetime import datetime, timedelta
 from confluent_kafka import Producer
 from confluent_kafka.serialization import StringSerializer, SerializationContext, MessageField
@@ -105,10 +102,6 @@ def run_producer():
             # Create car object
             car_object = ccloud.generate_random_car_object(speed_factor=speed_factor)
 
-            # Create car dictionary
-            car_dictionary = ccloud.object_to_dict(car_object)
-
-            string_serializer = StringSerializer("utf_8")
             json_serializer = JSONSerializer(
                 schema_str=ccloud.schema_str,
                 schema_registry_client=schema_registry_client,
@@ -120,11 +113,7 @@ def run_producer():
             # Send to confluent cloud topic
             producer.produce(
                 topic=topic,
-                # key=string_serializer(str(uuid4()),None),
-                # key=str(car_dictionary['license_plate']),
-                # key=str(1),
-                key=str(uuid4()),
-                # key=string_serializer(str(1),SerializationContext(topic, MessageField.KEY)),
+                key=car_object.license_plate,
                 value=json_serializer(
                     car_object, SerializationContext(topic, MessageField.VALUE)
                 ),

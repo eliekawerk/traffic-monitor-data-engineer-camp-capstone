@@ -58,7 +58,7 @@ schema_str = """
             },
             "speed": {
             "description": "The number type is used for any numeric type, either integers or floating point numbers.",
-            "type": "number"
+            "type": "integer"
             },
             "travel_direction": {
             "description": "The string type is used for strings of text.",
