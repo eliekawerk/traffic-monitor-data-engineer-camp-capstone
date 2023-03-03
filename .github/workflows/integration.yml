@@ -42,6 +42,14 @@ jobs:
       - name: pip list
         run: pip list
 
+      # Echo 
+      - name: echo env
+        run: |
+          echo $CH_HOST
+          echo $CH_DB_USER
+          echo $CH_DB_SCHEMA
+          echo $CH_DB_PASSWORD
+
       # run sqlfluff linting
       - name: sql linting
         run: |
