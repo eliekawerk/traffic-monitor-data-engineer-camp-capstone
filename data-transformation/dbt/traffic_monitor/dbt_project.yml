@@ -34,3 +34,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   traffic_monitor:
     # Config indicated by + and applies to all files under models/example/
+
+vars:
+    "dbt_date:time_zone": "Australia/Perth"

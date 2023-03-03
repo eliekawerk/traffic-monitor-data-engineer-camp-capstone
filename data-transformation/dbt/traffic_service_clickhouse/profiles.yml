@@ -6,9 +6,13 @@ traffic_service_clickhouse:
       schema: "{{ env_var('CH_DB_SCHEMA') }}"
       user: "{{ env_var('CH_DB_USER') }}"
       password: "{{ env_var('CH_DB_PASSWORD') }}"
+      # schema: default
+      # user: default
+      # password: IOwyu6Q24dpl
       #optional fields
-      driver: http
-      port: 8443
+      driver: native
+      port: 9440
+      # host: ygioimpn8l.us-west-2.aws.clickhouse.cloud
       host: "{{ env_var('CH_HOST') }}"
       retries: 1
       connect_timeout: 10

@@ -6,6 +6,7 @@ exclude_rules = L016,L028,L027
 [sqlfluff:templater:dbt]
 project_dir = traffic_monitor
 profiles_dir = traffic_monitor
+target = dev
 
 [sqlfluff:templater:jinja]
 apply_dbt_builtins = True
