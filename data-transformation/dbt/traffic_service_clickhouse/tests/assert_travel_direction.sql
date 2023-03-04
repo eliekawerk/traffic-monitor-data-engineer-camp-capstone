@@ -1,4 +1,4 @@
 -- Test assertion for travel direction
-select *
-from staging_traffic_vw
-where travel_direction not in ('Northbound', 'Southbound', 'Eastbound', 'Westbound')
+SELECT *
+FROM {{ ref('staging_traffic_vw') }}
+WHERE travel_direction NOT IN ('Northbound', 'Southbound')

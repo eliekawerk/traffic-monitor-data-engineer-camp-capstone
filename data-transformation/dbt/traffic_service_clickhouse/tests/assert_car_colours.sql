@@ -1,4 +1,4 @@
 -- Test assertion for valid car colour
-select *
-from staging_traffic_vw
-where colour not in ('white', 'green', 'blue', 'red', 'black', 'silver', 'yellow')
+SELECT *
+FROM {{ ref('staging_traffic_vw') }}
+WHERE colour NOT IN ('white', 'green', 'blue', 'red', 'black', 'silver', 'yellow')

@@ -5,7 +5,7 @@ SELECT
     fuel_type,
     colour,
     make,
-    TODATE(datetime) AS date,
+    toDate(datetime) AS date,
     COUNT(*) AS car_count
 FROM {{ ref('staging_traffic_vw') }}
 GROUP BY date, travel_direction, fuel_type, colour, make

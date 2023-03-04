@@ -1,4 +1,4 @@
 -- Test assertion for valid fuel type
-select *
-from staging_traffic_vw
-where fuel_type not in ('diesel', 'electric', 'petrol')
+SELECT *
+FROM {{ ref('staging_traffic_vw') }}
+WHERE fuel_type NOT IN ('diesel', 'electric', 'petrol')
