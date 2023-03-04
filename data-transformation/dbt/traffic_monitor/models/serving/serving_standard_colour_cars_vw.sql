@@ -1,8 +1,8 @@
 {{ config(materialized='view') }}
 
-SELECT 
+SELECT
     weekday,
-    travel_direction,    
+    travel_direction,
     colour
 FROM {{ ref('staging_traffic_vw') }}
-where colour in ('white', 'black', 'sliver')
+WHERE colour IN ('white', 'black', 'sliver')
