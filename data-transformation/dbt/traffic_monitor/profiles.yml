@@ -1,5 +1,5 @@
 traffic_monitor:
-  target: prod
+  target: dev
   outputs:
     dev:
       type: clickhouse
@@ -9,6 +9,38 @@ traffic_monitor:
       #optional fields
       driver: native
       port: 9440
+      host: "{{ env_var('CH_HOST') }}"
+      retries: 1
+      connect_timeout: 10
+      send_receive_timeout: 300
+      sync_request_timeout: 5
+      compress_block_size: 1048576
+      database_engine: MergeTree
+      secure: True
+    ci:
+      type: clickhouse
+      schema: "{{ env_var('CH_DB_SCHEMA') }}"
+      user: "{{ env_var('CH_DB_USER') }}"
+      password: "{{ env_var('CH_DB_PASSWORD') }}"
+      #optional fields
+      driver: http
+      port: 8443
+      host: "{{ env_var('CH_HOST') }}"
+      retries: 1
+      connect_timeout: 10
+      send_receive_timeout: 300
+      sync_request_timeout: 5
+      compress_block_size: 1048576
+      database_engine: MergeTree
+      secure: True
+    preprod:
+      type: clickhouse
+      schema: "{{ env_var('CH_DB_SCHEMA') }}"
+      user: "{{ env_var('CH_DB_USER') }}"
+      password: "{{ env_var('CH_DB_PASSWORD') }}"
+      #optional fields
+      driver: http
+      port: 8443
       host: "{{ env_var('CH_HOST') }}"
       retries: 1
       connect_timeout: 10
