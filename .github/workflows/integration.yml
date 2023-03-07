@@ -85,5 +85,5 @@ jobs:
         run: | 
           cd data-transformation/dbt/traffic_monitor
           dbt deps
-          dbt run --target preprod
-          dbt test --target preprod
+          dbt run
+          dbt test
