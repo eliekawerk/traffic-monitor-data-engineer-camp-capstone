@@ -56,32 +56,11 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION}}
 
-      # run export env file
-      - name: export .env file
-        run: |
-          export $(cat .env | sed -e 's/[\r\n]//g')
-          echo $bootstrap_servers
-          echo $sasl_username
-          echo $schema_registry_url
-          echo $CH_DB_SCHEMA
-          echo $CH_HOST
-
-      # run sqlfluff linting
+      # export env and run sqlfluff linting
       - name: sql linting
         run: |
-          ls -a
-          export $(cat .env | sed -e 's/[\r\n]//g')  
-          echo $bootstrap_servers
-          echo $sasl_username
-          echo $schema_registry_url
-          echo $CH_DB_SCHEMA
-          echo $CH_HOST       
+          export $(cat .env | sed -e 's/[\r\n]//g')     
           cd data-transformation/dbt
-          echo $bootstrap_servers
-          echo $sasl_username
-          echo $schema_registry_url
-          echo $CH_DB_SCHEMA
-          echo $CH_HOST
           sqlfluff lint traffic_monitor 
 
       # checkout to main branch
@@ -93,6 +72,8 @@ jobs:
       # generate dbt manifest.json
       - name: generate dbt manifest 
         run: | 
+          ls -a
+          export $(cat .env | sed -e 's/[\r\n]//g')  
           cd data-transformation/dbt/traffic_monitor
           dbt deps
           dbt compile --target dev
