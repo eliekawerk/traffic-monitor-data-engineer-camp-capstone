@@ -59,9 +59,7 @@ jobs:
       # export env and run sqlfluff linting
       - name: sql linting
         run: |
-          ls -a
-          export $(cat .env | sed -e 's/[\r\n]//g')
-          ls -a     
+          export $(cat .env | sed -e 's/[\r\n]//g')   
           cd data-transformation/dbt
           sqlfluff lint traffic_monitor 
 
@@ -84,13 +82,12 @@ jobs:
       # generate dbt manifest.json
       - name: generate dbt manifest 
         run: | 
-          ls -a
           export $(cat .env | sed -e 's/[\r\n]//g')  
           cd data-transformation/dbt/traffic_monitor
           dbt deps
           dbt compile --target dev
       
-      # publish manifest.json
+      # upload manifest.json
       - name: upload dbt manifest 
         uses: actions/upload-artifact@v3
         with: 
@@ -100,7 +97,7 @@ jobs:
       # checkout back to current branch 
       - name: checkout to current branch 
         uses: actions/checkout@v3
-
+      
       # download manifest.json to current working directory 
       - uses: actions/download-artifact@v3
         with:
@@ -112,6 +109,8 @@ jobs:
       # dbt test -m state:modified+1 --defer --state . --target ci
       - name: dbt run and test
         run: | 
+          ls -a
+          export $(cat .env | sed -e 's/[\r\n]//g')  
           cd data-transformation/dbt/traffic_monitor
           dbt deps
           dbt run
