@@ -58,8 +58,7 @@ jobs:
       # run export env file
       - name: export .env file
         run: |
-          ls -a
-          export eval $(.env | sed -e 's/[\r\n]//g')
+          export .env | sed -e 's/[\r\n]//g'
           echo $bootstrap_servers
 
       # run sqlfluff linting
