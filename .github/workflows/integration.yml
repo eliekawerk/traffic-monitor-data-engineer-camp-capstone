@@ -16,7 +16,7 @@ env:
   GH_REF: ${{ github.ref }}   
 
 jobs: 
-  build-traffic-monitor:  # your custom name1
+  build-traffic-monitor:  # your custom name
     runs-on: ubuntu-latest
     steps: 
       # git checkout code to the machine
