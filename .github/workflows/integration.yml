@@ -59,7 +59,9 @@ jobs:
       # export env and run sqlfluff linting
       - name: sql linting
         run: |
-          export $(cat .env | sed -e 's/[\r\n]//g')     
+          ls -a
+          export $(cat .env | sed -e 's/[\r\n]//g')
+          ls -a     
           cd data-transformation/dbt
           sqlfluff lint traffic_monitor 
 
