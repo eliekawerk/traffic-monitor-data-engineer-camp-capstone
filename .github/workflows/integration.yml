@@ -67,8 +67,13 @@ jobs:
 
       # run sqlfluff linting
       - name: sql linting
-        run: |
+        run: |          
           cd data-transformation/dbt
+          echo $bootstrap_servers
+          echo $sasl_username
+          echo $schema_registry_url
+          echo $CH_DB_SCHEMA
+          echo $CH_HOST
           sqlfluff lint traffic_monitor 
 
       # checkout to main branch
