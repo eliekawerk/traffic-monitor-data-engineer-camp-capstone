@@ -1,4 +1,4 @@
-name: deployment
+name: deployment-prod
 on:
   workflow_dispatch: 
 
