@@ -1,4 +1,4 @@
-name: test
+name: deployment
 on:
   workflow_dispatch: 
 
@@ -10,7 +10,7 @@ env:
   GH_REF: ${{ github.ref }} 
 
 jobs:
-  dbt-test:
+  build: 
     runs-on: ubuntu-latest
     steps: 
       # git checkout 
@@ -34,6 +34,7 @@ jobs:
         run: |
           cd transforms/dbt/traffic_service_clickhouse
           dbt deps
+
       # checkout to main 
       - name: checkout to main
         uses: actions/checkout@v3
@@ -45,4 +46,4 @@ jobs:
         run: | 
           cd transforms/dbt/traffic_service_clickhouse
           dbt deps
-          dbt test
+          dbt run

@@ -1,19 +1,22 @@
 name: integration
 #trigger on
 on:
-  # workflow_dispatch: 
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch: 
+  # pull_request:
+  #   branches: [ main ]
 
 env:
-  CH_HOST: ${{ secrets.CH_HOST }}
-  CH_DB_USER: ${{ secrets.CH_DB_USER }}
-  CH_DB_SCHEMA: ${{ secrets.CH_DB_SCHEMA }}
-  CH_DB_PASSWORD: ${{ secrets.CH_DB_PASSWORD }}
-  GH_REF: ${{ github.ref }} 
+  # CH_HOST: ${{ secrets.CH_HOST }}
+  # CH_DB_USER: ${{ secrets.CH_DB_USER }}
+  # CH_DB_SCHEMA: ${{ secrets.CH_DB_SCHEMA }}
+  # CH_DB_PASSWORD: ${{ secrets.CH_DB_PASSWORD }}
+  aws-access-key-id =  ${{ secrets.AWS_ACCESS_KEY_ID}} 
+  aws-secret-access-key =  ${{ secrets.AWS_SECRET_ACCESS_KEY}} 
+  aws-region =  ${{ secrets.AWS_REGION}} 
+  GH_REF: ${{ github.ref }}   
 
 jobs: 
-  build-test:  # your custom name
+  build-traffic-monitor:  # your custom name
     runs-on: ubuntu-latest
     steps: 
       # git checkout code to the machine
@@ -41,6 +44,20 @@ jobs:
       # show packages
       - name: pip list
         run: pip list
+
+      # read env file from s3
+      - uses: keithweaver/aws-s3-github-action@v1.0.0
+        with:
+          command: cp
+          source: s3://traffic-monitor-env-s3-bucket/.env
+          destination: - 
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ secrets.AWS_REGION}}
+
+      # run sqlfluff linting
+      - name: ls
+        run: ls
 
       # run sqlfluff linting
       - name: sql linting
