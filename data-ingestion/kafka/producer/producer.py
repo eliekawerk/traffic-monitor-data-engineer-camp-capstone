@@ -1,11 +1,11 @@
 import os
-# os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"]="1"
+os.environ["CONDA_DLL_SEARCH_MODIFICATION_ENABLE"]="1"
 import random
 import time
 import logging
 from datetime import datetime, timedelta
 from confluent_kafka import Producer
-from confluent_kafka.serialization import StringSerializer, SerializationContext, MessageField
+from confluent_kafka.serialization import SerializationContext, MessageField
 from confluent_kafka.schema_registry import SchemaRegistryClient
 from confluent_kafka.schema_registry.json_schema import JSONSerializer
 from utility import ccloud_lib as ccloud
@@ -65,39 +65,207 @@ def run_producer():
         # Loop n times generating car objects simulating cars driving under a gantry
         while datetime.now() < end_datetime:
 
+            hour = datetime.now().hour
+
             # Weekday
-            if datetime.now().weekday() in [0, 1, 2, 3, 4]:
-                # print("Weekday")
-                # Peak
-                if (datetime.now().hour >= 6 and datetime.now().hour <= 7) or (
-                    datetime.now().hour >= 16 and datetime.now().hour <= 17
-                ):
-                    time_delay = random.randint(50, 90)
-                    speed_factor = random.uniform(-20, 10)
-                    # print("Peak")
-
-                # Off-peak
-                elif datetime.now().hour <= 4 or datetime.now().hour >= 22:
-                    time_delay = random.randint(80, 100)
-                    speed_factor = random.uniform(0, 30)
-                    # print("Off Peak")
-
-                # Shoulder
-                else:
-                    time_delay = random.randint(1, 70)
-                    speed_factor = random.uniform(-10, 20)
-                    # print("Shoulder")
+            if datetime.now().weekday() in [0,1,2,3,4]:
+                
+                match hour:                
+                    case 0:
+                        time_delay = random.randint(600, 800)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 1:
+                        time_delay = random.randint(800, 1200)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 2:
+                        time_delay = random.randint(1200, 1400)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 3:
+                        time_delay = random.randint(1400, 1800)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 4:
+                        time_delay = random.randint(400, 600)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 5:
+                        time_delay = random.randint(100, 150)
+                        speed_factor = random.uniform(-5, 5)
+                        
+                    case 6:
+                        time_delay = random.randint(10, 20)
+                        speed_factor = random.uniform(-15, -5)
+                        
+                    case 7:
+                        time_delay = random.randint(5, 10)
+                        speed_factor = random.uniform(-15, -10)
+                        
+                    case 8:
+                        time_delay = random.randint(10, 20)
+                        speed_factor = random.uniform(-10, -5)
+                        
+                    case 9:
+                        time_delay = random.randint(10, 20)
+                        speed_factor = random.uniform(-5, 0)
+                        
+                    case 10:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 11:
+                        time_delay = random.randint(30, 40)
+                        speed_factor = random.uniform(5, 10)
+                        
+                    case 12:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 13:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(-5, 0)
+                        
+                    case 14:
+                        time_delay = random.randint(30, 40)
+                        speed_factor = random.uniform(-10, -5)
+                        
+                    case 15:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(-5, 0)
+                        
+                    case 16:
+                        time_delay = random.randint(10, 20)
+                        speed_factor = random.uniform(-10, -5)
+                        
+                    case 17:
+                        time_delay = random.randint(5, 10)
+                        speed_factor = random.uniform(-15, -10)
+                        
+                    case 18:
+                        time_delay = random.randint(10, 20)
+                        speed_factor = random.uniform(-10, -5)
+                        
+                    case 19:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(-5, 0)
+                        
+                    case 20:
+                        time_delay = random.randint(30, 50)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 21:
+                        time_delay = random.randint(50, 100)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 22:
+                        time_delay = random.randint(100, 200)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 23:
+                        time_delay = random.randint(200, 600)
+                        speed_factor = random.uniform(0, 10)                     
 
             # Weekend
-            else:
-                # print("Weekend")
-                if datetime.now().hour >= 9 and datetime.now().hour <= 18:
-                    time_delay = random.randint(1, 70)
-                    speed_factor = random.uniform(-10, 10)
+            else:   
+                match hour:
+                    case 0:
+                        time_delay = random.randint(600, 800)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 1:
+                        time_delay = random.randint(800, 1200)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 2:
+                        time_delay = random.randint(1200, 1400)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 3:
+                        time_delay = random.randint(1400, 1800)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 4:
+                        time_delay = random.randint(400, 600)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 5:
+                        time_delay = random.randint(250, 350)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 6:
+                        time_delay = random.randint(100, 200)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 7:
+                        time_delay = random.randint(50, 80)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 8:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 9:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 10:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 11:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 12:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 13:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 14:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 15:
+                        time_delay = random.randint(20, 30)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 16:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 5)
+                        
+                    case 17:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 18:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 19:
+                        time_delay = random.randint(20, 40)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 20:
+                        time_delay = random.randint(30, 50)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 21:
+                        time_delay = random.randint(50, 100)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 22:
+                        time_delay = random.randint(100, 200)
+                        speed_factor = random.uniform(0, 10)
+                        
+                    case 23:
+                        time_delay = random.randint(200, 600)
+                        speed_factor = random.uniform(0, 10)    
 
-                else:
-                    time_delay = random.randint(70, 100)
-                    speed_factor = random.uniform(0, 30)
 
             # Create car object
             car_object = ccloud.generate_random_car_object(speed_factor=speed_factor)
@@ -117,12 +285,11 @@ def run_producer():
                 value=json_serializer(
                     car_object, SerializationContext(topic, MessageField.VALUE)
                 ),
-                # value=json.dumps(car_dictionary),
                 on_delivery=ccloud.delivery_report
             )
 
             # Time delay between car objects being created
-            time.sleep(time_delay * 0.03)
+            time.sleep(time_delay / 10)
 
         producer.flush()
         logging.info(f"Producer has finished.")

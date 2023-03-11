@@ -207,7 +207,7 @@ def generate_random_car_object(speed_factor: int) -> object:
         passenger_count=fake.car_passengers_count(),
         travel_direction=fake.car_travel_direction(),
         lane=fake.car_lane(),
-        speed=int(random.randint(50, 90) + speed_factor),
+        speed=int(random.randint(70, 90) + speed_factor),
         datetimestamp=(datetime.utcnow() + timedelta(hours=+8)).strftime(
             "%d/%m/%Y %H:%M:%S.%f"
         )
