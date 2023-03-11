@@ -57,7 +57,7 @@ jobs:
 
       # run sqlfluff linting
       - name: ls
-        run: ls
+        run: ls -a
 
       # run sqlfluff linting
       - name: sql linting
