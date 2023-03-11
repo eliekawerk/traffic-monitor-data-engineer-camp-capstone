@@ -10,9 +10,9 @@ env:
   # CH_DB_USER: ${{ secrets.CH_DB_USER }}
   # CH_DB_SCHEMA: ${{ secrets.CH_DB_SCHEMA }}
   # CH_DB_PASSWORD: ${{ secrets.CH_DB_PASSWORD }}
-  aws-access-key-id =  ${{ secrets.AWS_ACCESS_KEY_ID}} 
-  aws-secret-access-key =  ${{ secrets.AWS_SECRET_ACCESS_KEY}} 
-  aws-region =  ${{ secrets.AWS_REGION}} 
+  # aws-access-key-id =  ${{ secrets.AWS_ACCESS_KEY_ID}} 
+  # aws-secret-access-key =  ${{ secrets.AWS_SECRET_ACCESS_KEY}} 
+  # aws-region =  ${{ secrets.AWS_REGION}} 
   GH_REF: ${{ github.ref }}   
 
 jobs: 
