@@ -13,7 +13,8 @@ env:
   # aws-access-key-id =  ${{ secrets.AWS_ACCESS_KEY_ID}} 
   # aws-secret-access-key =  ${{ secrets.AWS_SECRET_ACCESS_KEY}} 
   # aws-region =  ${{ secrets.AWS_REGION}} 
-  GH_REF: ${{ github.ref }}   
+  GH_REF: ${{ github.ref }}
+
 
 jobs: 
   build-traffic-monitor:  # your custom name
@@ -67,7 +68,14 @@ jobs:
 
       # run sqlfluff linting
       - name: sql linting
-        run: |          
+        run: |
+          ls -a
+          export $(cat .env | sed -e 's/[\r\n]//g')  
+          echo $bootstrap_servers
+          echo $sasl_username
+          echo $schema_registry_url
+          echo $CH_DB_SCHEMA
+          echo $CH_HOST       
           cd data-transformation/dbt
           echo $bootstrap_servers
           echo $sasl_username
