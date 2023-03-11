@@ -36,14 +36,14 @@ jobs:
           pip install -r data-transformation/dbt/requirements.txt
       
       # install dbt packages
-      # - name: dbt deps
-      #   run: |
-      #     cd data-transformation/dbt/traffic_monitor
-      #     dbt deps
+      - name: dbt deps
+        run: |
+          cd data-transformation/dbt/traffic_monitor
+          dbt deps
 
-      # # show packages
-      # - name: pip list
-      #   run: pip list
+      # show packages
+      - name: pip list
+        run: pip list
 
       # read env file from s3
       - uses: keithweaver/aws-s3-github-action@v1.0.0
