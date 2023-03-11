@@ -59,6 +59,11 @@ jobs:
       - name: export .env file
         run: |
           export $(cat .env | sed -e 's/[\r\n]//g')
+          echo $bootstrap_servers
+          echo $sasl_username
+          echo $schema_registry_url
+          echo $CH_DB_SCHEMA
+          echo $CH_HOST
 
       # run sqlfluff linting
       - name: sql linting
