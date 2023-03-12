@@ -10,9 +10,6 @@ env:
   # CH_DB_USER: ${{ secrets.CH_DB_USER }}
   # CH_DB_SCHEMA: ${{ secrets.CH_DB_SCHEMA }}
   # CH_DB_PASSWORD: ${{ secrets.CH_DB_PASSWORD }}
-  # aws-access-key-id =  ${{ secrets.AWS_ACCESS_KEY_ID}} 
-  # aws-secret-access-key =  ${{ secrets.AWS_SECRET_ACCESS_KEY}} 
-  # aws-region =  ${{ secrets.AWS_REGION}} 
   GH_REF: ${{ github.ref }}
 
 
@@ -28,7 +25,7 @@ jobs:
       - name: set up python 
         uses: actions/setup-python@v4
         with: 
-          python-version: 3.9
+          python-version: 3.10
 
       # install python dependencies 
       - name: install dependencies 
@@ -85,7 +82,7 @@ jobs:
           export $(cat .env | sed -e 's/[\r\n]//g')  
           cd data-transformation/dbt/traffic_monitor
           dbt deps
-          dbt compile --target dev
+          dbt compile --target prod
       
       # upload manifest.json
       - name: upload dbt manifest 
@@ -117,11 +114,12 @@ jobs:
       # dbt run and test
       # dbt run -m state:modified+1 --defer --state . --target ci
       # dbt test -m state:modified+1 --defer --state . --target ci
+      # dbt run
+      # dbt test
       - name: dbt run and test
         run: | 
-          ls -a
           export $(cat .env | sed -e 's/[\r\n]//g')  
           cd data-transformation/dbt/traffic_monitor
-          dbt deps
-          dbt run
-          dbt test
+          dbt deps          
+          dbt run --target ci
+          dbt test --target ci
