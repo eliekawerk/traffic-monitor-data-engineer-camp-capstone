@@ -13,34 +13,34 @@ env:
   aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   aws_region: ${{ secrets.AWS_REGION }}  
 
-jobs:
-  env:
-    runs-on: ubuntu-latest
-    # outputs:
-    #   env: ${{ steps.dotenv.outputs.aws_dev_ecr }}
+# jobs:
+#   env:
+#     runs-on: ubuntu-latest
+#     # outputs:
+#     #   env: ${{ steps.dotenv.outputs.aws_dev_ecr }}
     
-    steps:
-      # git checkout 
-      - name: checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       # git checkout 
+#       - name: checkout code
+#         uses: actions/checkout@v3
 
-      - uses: keithweaver/aws-s3-github-action@v1.0.0
-        with:
-          command: cp
-          source: s3://traffic-monitor-env-s3-bucket/.env
-          # destination:
-          aws_access_key_id: ${{ env.aws_access_key_id }}
-          aws_secret_access_key: ${{ env.aws_secret_access_key }}
-          aws_region: ${{ env.aws_region }}
+#       - uses: keithweaver/aws-s3-github-action@v1.0.0
+#         with:
+#           command: cp
+#           source: s3://traffic-monitor-env-s3-bucket/.env
+#           # destination:
+#           aws_access_key_id: ${{ env.aws_access_key_id }}
+#           aws_secret_access_key: ${{ env.aws_secret_access_key }}
+#           aws_region: ${{ env.aws_region }}
 
-      # export env
-      # cat .env | sed -e 's/[\r\n]//g' >> $GITHUB_ENV
-      # echo ${{ env.aws_dev_ecr }}
-      - name: export env file
-        run: |
-          # $(cat .env | sed -e 's/[\r\n]//g') >> $GITHUB_ENV
-          echo "luke=huntley" >> $GITHUB_ENV
-          echo ${{ env.luke }}
+#       # export env
+#       # cat .env | sed -e 's/[\r\n]//g' >> $GITHUB_ENV
+#       # echo ${{ env.aws_dev_ecr }}
+#       - name: export env file
+#         run: |
+#           # $(cat .env | sed -e 's/[\r\n]//g') >> $GITHUB_ENV
+#           echo "luke=huntley" >> $GITHUB_ENV
+#           echo ${{ env.luke }}
           
 
       # - name: Import environment variables from a file
@@ -81,7 +81,7 @@ jobs:
 
   build: 
     runs-on: ubuntu-latest    
-    needs: [env]
+    # needs: [env]
     # env: $ {{ steps.dotenv.outputs.aws_dev_ecr }}
     steps: 
       # git checkout 
@@ -92,21 +92,26 @@ jobs:
       - name: set up docker buildx
         uses: docker/setup-buildx-action@v2
 
-      # # read env file from s3
-      # - uses: keithweaver/aws-s3-github-action@v1.0.0
-      #   with:
-      #     command: cp
-      #     source: s3://traffic-monitor-env-s3-bucket/.env
-      #     # destination:
-      #     aws_access_key_id: ${{ env.aws_access_key_id }}
-      #     aws_secret_access_key: ${{ env.aws_secret_access_key }}
-      #     aws_region: ${{ env.aws_region }}
+      # read env file from s3
+      - uses: keithweaver/aws-s3-github-action@v1.0.0
+        with:
+          command: cp
+          source: s3://traffic-monitor-env-s3-bucket/.env
+          # destination:
+          aws_access_key_id: ${{ env.aws_access_key_id }}
+          aws_secret_access_key: ${{ env.aws_secret_access_key }}
+          aws_region: ${{ env.aws_region }}
 
       # # export env
       # - name: export env file
       #   run: |
       #     export $(cat .env | sed -e 's/[\r\n]//g') 
       #     echo $aws_dev_ecr
+
+      - name: export env file
+        run: |
+          echo "luke=huntley" >> $GITHUB_ENV
+          echo ${{ env.luke }}
 
       #login to prod aws ecr
       - name: login to aws ecr
