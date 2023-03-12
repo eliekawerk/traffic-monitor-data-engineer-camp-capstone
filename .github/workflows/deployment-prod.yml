@@ -14,25 +14,56 @@ env:
   aws_region: ${{ secrets.AWS_REGION }}  
 
 jobs:
-  build: 
+  env:
     runs-on: ubuntu-latest
-    # env:
-    #   steps:
-    #     - uses: keithweaver/aws-s3-github-action@v1.0.0
-    #         with:
-    #           command: cp
-    #           source: s3://traffic-monitor-env-s3-bucket/.env
-    #           # destination:
-    #           aws_access_key_id: ${{ env.aws_access_key_id }}
-    #           aws_secret_access_key: ${{ env.aws_secret_access_key }}
-    #           aws_region: ${{ env.aws_region }}
-
-    #     # export env
-    #     - name: export env file
-    #       run: |
-    #         export $(cat .env | sed -e 's/[\r\n]//g') 
-    #         echo $aws_dev_ecr
+    # outputs:
+    #   env: ${{ steps.inmport-env.outputs.result }}
     
+    steps:
+      # git checkout 
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - uses: keithweaver/aws-s3-github-action@v1.0.0
+          with:
+            command: cp
+            source: s3://traffic-monitor-env-s3-bucket/.env
+            # destination:
+            aws_access_key_id: ${{ env.aws_access_key_id }}
+            aws_secret_access_key: ${{ env.aws_secret_access_key }}
+            aws_region: ${{ env.aws_region }}
+
+      # # export env
+      # - name: export env file
+      #   run: |
+      #     export $(cat .env | sed -e 's/[\r\n]//g') 
+      #     echo $aws_dev_ecr
+
+      # - name: Import environment variables from a file
+      #   id: import-env
+      #   shell: bash
+      #   run: |
+      #     while read line; do
+      #       echo "$line" >> $GITHUB_ENV
+      #     done < ${{ env.ENV_FILE }}
+
+      # - name: Import environment variables from a file
+      #   id: import-env
+      #   run: cat ${{ env.ENV_FILE }} >> $GITHUB_ENV
+
+      - name: Dotenv Action
+        uses: falti/dotenv-action@v1.0.4
+
+      - name: echo env file
+        run: |
+          echo {{ env.aws_access_key_id }}
+          echo ${{ steps.dotenv.outputs.version }}
+
+
+  build: 
+    runs-on: ubuntu-latest    
+    needs: [env]
+    env: $ {{ aws_dev_ecr }}
     steps: 
       # git checkout 
       - name: checkout code
