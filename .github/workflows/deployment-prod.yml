@@ -34,9 +34,10 @@ jobs:
           aws_region: ${{ env.aws_region }}
 
       # export env
+      # cat .env | sed -e 's/[\r\n]//g' >> $GITHUB_ENV
       - name: export env file
         run: |
-          cat .env | sed -e 's/[\r\n]//g' >> $GITHUB_ENV
+          $(cat .env) >> $GITHUB_ENV
           echo ${{ env.aws_dev_ecr }}
 
       # - name: Import environment variables from a file
