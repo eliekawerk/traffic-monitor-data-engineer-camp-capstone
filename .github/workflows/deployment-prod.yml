@@ -55,7 +55,9 @@ jobs:
         uses: falti/dotenv-action@v1.0.4
 
       - name: echo env file
-        run: echo ${{ steps.dotenv.outputs.aws_dev_ecr }}
+        run: |
+          echo ${{ steps.dotenv.outputs.aws_dev_ecr }}
+          echo ${{ aws_region }}
 
 
   build: 
