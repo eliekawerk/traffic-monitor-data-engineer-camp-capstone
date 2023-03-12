@@ -123,14 +123,20 @@ jobs:
       #       echo "$line" >> $GITHUB_ENV
       #     done < .env
 
+      # - name: write to $github_env
+      #   shell: bash
+      #   run: | 
+      #     echo luke=huntley >> $GITHUB_ENV
+      #     cat .env | while read line || [[ -n $line ]];
+      #     do
+      #       echo $line >>  $GITHUB_ENV
+      #     done
+
       - name: write to $github_env
         shell: bash
         run: | 
           echo luke=huntley >> $GITHUB_ENV
-          cat .env | while read line || [[ -n $line ]];
-          do
-            echo $line >>  $GITHUB_ENV
-          done
+          cat .env | while read line || [[ -n $line ]]; echo $line >>  $GITHUB_ENV
           
       - name: read from $github_env
         run: |
