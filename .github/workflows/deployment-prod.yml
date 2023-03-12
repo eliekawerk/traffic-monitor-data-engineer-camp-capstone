@@ -16,8 +16,8 @@ env:
 jobs:
   env:
     runs-on: ubuntu-latest
-    outputs:
-      env: ${{ steps.dotenv.outputs.aws_dev_ecr }}
+    # outputs:
+    #   env: ${{ steps.dotenv.outputs.aws_dev_ecr }}
     
     steps:
       # git checkout 
@@ -33,11 +33,11 @@ jobs:
           aws_secret_access_key: ${{ env.aws_secret_access_key }}
           aws_region: ${{ env.aws_region }}
 
-      # # export env
-      # - name: export env file
-      #   run: |
-      #     export $(cat .env | sed -e 's/[\r\n]//g') 
-      #     echo $aws_dev_ecr
+      # export env
+      - name: export env file
+        run: |
+          cat .env | sed -e 's/[\r\n]//g' >> $GITHUB_ENV
+          echo ${{ env.aws_dev_ecr }}
 
       # - name: Import environment variables from a file
       #   id: import-env
@@ -51,14 +51,28 @@ jobs:
       #   id: import-env
       #   run: cat ${{ env.ENV_FILE }} >> $GITHUB_ENV
 
-      - name: Dotenv Action
-        id : dotenv
-        uses: falti/dotenv-action@v1.0.4
+      # - name: Dotenv Action
+      #   id : dotenv
+      #   uses: falti/dotenv-action@v1.0.4
 
-      - name: echo env file
-        run: |
-          echo ${{ steps.dotenv.outputs.aws_dev_ecr }}
-          echo ${{ env.aws_region }}
+      # - name: echo env file
+      #   run: |
+      #     echo ${{ steps.dotenv.outputs.aws_dev_ecr }}
+      #     echo ${{ env.aws_region }}
+
+      # - name: Environment Variables from Dotenv
+      #   uses: c-py/action-dotenv-to-setenv@v4
+      #   with:
+      #     env-file: .env
+      
+      # - name: Set the value in bash
+      #   id: step_one
+      #   run: |
+      #     EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+      #     echo "JSON_RESPONSE<<$EOF" >> $GITHUB_ENV
+      #     curl https://example.com >> $GITHUB_ENV
+      #     echo "$EOF" >> $GITHUB_ENV
+
 
 
   build: 
