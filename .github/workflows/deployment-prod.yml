@@ -44,14 +44,14 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: ${{ env.dev_ecr }}
-          username: $ {{ env.aws_access_key_id }}
+          username: ${{ env.aws_access_key_id }}
           password: ${{ env.aws_secret_access_key }}
 
-      # set up python version 
-      - name: set up python 
-        uses: actions/setup-python@v4
-        with: 
-          python-version: '3.10'
+      # # set up python version 
+      # - name: set up python 
+      #   uses: actions/setup-python@v4
+      #   with: 
+      #     python-version: '3.10'
 
       # # # install python dependencies 
       # - name: install dependencies 
