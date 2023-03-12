@@ -16,6 +16,23 @@ env:
 jobs:
   build: 
     runs-on: ubuntu-latest
+    env:
+      steps:
+        - uses: keithweaver/aws-s3-github-action@v1.0.0
+            with:
+              command: cp
+              source: s3://traffic-monitor-env-s3-bucket/.env
+              # destination:
+              aws_access_key_id: ${{ env.aws_access_key_id }}
+              aws_secret_access_key: ${{ env.aws_secret_access_key }}
+              aws_region: ${{ env.aws_region }}
+
+        # export env
+        - name: export env file
+          run: |
+            export $(cat .env | sed -e 's/[\r\n]//g') 
+            echo $aws_dev_ecr
+    
     steps: 
       # git checkout 
       - name: checkout code
@@ -45,7 +62,7 @@ jobs:
       - name: login to aws ecr
         uses: docker/login-action@v2        
         with:
-          registry: ${{ eval($aws_dev_ecr) }}
+          registry: ${{ echo $aws_dev_ecr }}
           username: ${{ env.aws_access_key_id }}
           password: ${{ env.aws_secret_access_key }}
 
