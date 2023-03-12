@@ -109,10 +109,15 @@ jobs:
       #     echo $aws_dev_ecr
 
       - name: write to $github_env
-        run: echo luke=huntley >> $GITHUB_ENV
+        run: | 
+          echo luke=huntley >> $GITHUB_ENV
+          cat ${{ env.ENV_FILE }} >> $GITHUB_ENV
           
       - name: read from $github_env
-        run: echo ${{ env.luke }}
+        run: |
+          echo ${{ env.luke }}
+          echo ${{ env.aws_dev_ecr }}
+
 
       #login to prod aws ecr
       - name: login to aws ecr
