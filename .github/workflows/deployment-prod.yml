@@ -111,7 +111,7 @@ jobs:
       - name: write to $github_env
         run: | 
           echo luke=huntley >> $GITHUB_ENV
-          cat ${{ env.ENV_FILE }} >> $GITHUB_ENV
+          $(cat .env | sed -e 's/[\r\n]//g') >> $GITHUB_ENV
           
       - name: read from $github_env
         run: |
