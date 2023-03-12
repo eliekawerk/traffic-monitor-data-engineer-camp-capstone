@@ -57,6 +57,7 @@ jobs:
       - name: echo env file
         run: |
           echo ${{ env.aws_access_key_id }}
+          echo ${{ env.aws_dev_ecr }}    
           echo ${{ steps.dotenv.outputs.version }}
 
 
