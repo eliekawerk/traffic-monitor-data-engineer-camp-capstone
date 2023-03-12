@@ -109,11 +109,28 @@ jobs:
       #     echo $aws_dev_ecr
 
       # $(cat .env | sed -e 's/[\r\n]//g') >> $GITHUB_ENV
+      # - name: write to $github_env
+      #   shell: bash
+      #   run: | 
+      #     echo luke=huntley >> $GITHUB_ENV
+      #     cat .env | sed -e 's/[\r\n]//g' | while read line; $line >> $GITHUB_ENV
+
+      # - name: write to $github_env
+      #   shell: bash
+      #   run: | 
+      #     echo luke=huntley >> $GITHUB_ENV
+      #     while read line; do
+      #       echo "$line" >> $GITHUB_ENV
+      #     done < .env
+
       - name: write to $github_env
         shell: bash
         run: | 
           echo luke=huntley >> $GITHUB_ENV
-          cat .env | sed -e 's/[\r\n]//g' | while read line; $line >> $GITHUB_ENV
+          cat .env | while read line || [[ -n $line ]];
+          do
+            echo $line >>  $GITHUB_ENV
+          done
           
       - name: read from $github_env
         run: |
