@@ -45,7 +45,7 @@ jobs:
       - name: login to aws ecr
         uses: docker/login-action@v2        
         with:
-          registry: $aws_dev_ecr
+          registry: ${{ $aws_dev_ecr }}
           username: ${{ env.aws_access_key_id }}
           password: ${{ env.aws_secret_access_key }}
 
