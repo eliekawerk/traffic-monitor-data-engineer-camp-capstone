@@ -111,7 +111,7 @@ jobs:
       - name: export env file
         run: |
 
-          echo "luke=huntley" >> $GITHUB_ENV
+          echo luke=huntley >> $GITHUB_ENV
           echo ${{ env.luke }}
 
       #login to prod aws ecr
