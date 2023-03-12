@@ -49,7 +49,7 @@ jobs:
           context: ./data-ingestion/kafka/producer/
           push: true 
           tags: |
-            $ {{ env.aws_dev_ecr }}:${{ github.sha }}
+            ${{ env.aws_dev_ecr }}:${{ github.sha }}
 
       # # set up python version 
       # - name: set up python 
