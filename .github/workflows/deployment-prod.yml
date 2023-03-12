@@ -35,10 +35,13 @@ jobs:
 
       # export env
       # cat .env | sed -e 's/[\r\n]//g' >> $GITHUB_ENV
+      # echo ${{ env.aws_dev_ecr }}
       - name: export env file
         run: |
-          $(cat .env | sed -e 's/[\r\n]//g') >> $GITHUB_ENV
-          echo ${{ env.aws_dev_ecr }}
+          # $(cat .env | sed -e 's/[\r\n]//g') >> $GITHUB_ENV
+          echo "luke=huntley" >> $GITHUB_ENV
+          echo ${{ env.luke }}
+          
 
       # - name: Import environment variables from a file
       #   id: import-env
