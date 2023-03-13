@@ -113,5 +113,6 @@ jobs:
       # dbt deps
       - name: deploy dbt project 
         run: | 
-          cd data-transformation/dbt/traffic_monitor          
-          dbt run
+          cd data-transformation/dbt/traffic_monitor
+          export $(cat .env | sed -e 's/[\r\n]//g')            
+          dbt run --target prod
