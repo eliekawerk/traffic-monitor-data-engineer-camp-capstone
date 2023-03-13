@@ -114,13 +114,14 @@ jobs:
       #     dbt deps
       
       # deploy dbt project
-      # export CH_HOST=${{ env.CH_HOST }} 
-      # export CH_DB_SCHEMA=${{ env.CH_DB_SCHEMA }}
-      # export CH_DB_USER=${{ env.CH_DB_USER }}
-      # export CH_DB_PASSWORD=${{ env.CH_DB_PASSWORD }}  
+   
+      # export $(cat .env | sed -e 's/[\r\n]//g')  
       - name: deploy dbt project 
-        run: |
-          export $(cat .env | sed -e 's/[\r\n]//g')  
-          cd data-transformation/dbt/traffic_monitor        
+        run: |          
+          cd data-transformation/dbt/traffic_monitor     
+          export CH_HOST=${{ env.CH_HOST }} 
+          export CH_DB_SCHEMA=${{ env.CH_DB_SCHEMA }}
+          export CH_DB_USER=${{ env.CH_DB_USER }}
+          export CH_DB_PASSWORD=${{ env.CH_DB_PASSWORD }}     
           dbt deps      
           dbt run --target ci
