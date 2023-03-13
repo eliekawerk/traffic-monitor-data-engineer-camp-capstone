@@ -108,10 +108,10 @@ jobs:
           pip install -r data-transformation/dbt/requirements.txt
       
       # install dbt packages
-      - name: dbt deps
-        run: |
-          cd data-transformation/dbt/traffic_monitor
-          dbt deps
+      # - name: dbt deps
+      #   run: |
+      #     cd data-transformation/dbt/traffic_monitor
+      #     dbt deps
       
       # deploy dbt project
       - name: deploy dbt project 
@@ -122,4 +122,4 @@ jobs:
           export CH_DB_PASSWORD=${{ env.CH_DB_PASSWORD }}
           export CH_HOST=${{ env.CH_HOST }} 
           dbt deps      
-          dbt run --target prod
+          dbt run --target ci

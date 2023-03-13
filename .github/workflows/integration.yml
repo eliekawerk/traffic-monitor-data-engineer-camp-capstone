@@ -118,6 +118,7 @@ jobs:
         run: | 
           export $(cat .env | sed -e 's/[\r\n]//g')  
           cd data-transformation/dbt/traffic_monitor
+          echo $CH_HOST
           dbt deps          
           dbt run --target ci
           dbt test --target ci
