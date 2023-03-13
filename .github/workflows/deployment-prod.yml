@@ -107,21 +107,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r data-transformation/dbt/requirements.txt
       
-      # install dbt packages
-      # - name: dbt deps
-      #   run: |
-      #     cd data-transformation/dbt/traffic_monitor
-      #     dbt deps
-      
-      # deploy dbt project
-   
-      # export $(cat .env | sed -e 's/[\r\n]//g')  
       - name: deploy dbt project 
         run: |          
-          cd data-transformation/dbt/traffic_monitor     
-          export CH_HOST=${{ env.CH_HOST }} 
-          export CH_DB_SCHEMA=${{ env.CH_DB_SCHEMA }}
-          export CH_DB_USER=${{ env.CH_DB_USER }}
-          export CH_DB_PASSWORD=${{ env.CH_DB_PASSWORD }}     
+          cd data-transformation/dbt/traffic_monitor         
           dbt deps      
-          dbt run --target ci
+          dbt run --target prod
