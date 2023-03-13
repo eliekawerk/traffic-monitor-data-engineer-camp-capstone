@@ -114,8 +114,6 @@ jobs:
       # dbt run and test
       # dbt run -m state:modified+1 --defer --state . --target ci
       # dbt test -m state:modified+1 --defer --state . --target ci
-      # dbt run
-      # dbt test
       - name: dbt run and test
         run: | 
           export $(cat .env | sed -e 's/[\r\n]//g')  

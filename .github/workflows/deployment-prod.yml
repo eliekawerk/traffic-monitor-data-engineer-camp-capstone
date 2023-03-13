@@ -89,7 +89,7 @@ jobs:
           aws-secret-access-key: ${{ env.aws_secret_access_key }}
           aws-region: ${{ env.aws_region }}
 
-      # deploy preprod ecs task definition
+      # deploy prod ecs task definition
       - name: deploy prod ecs task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
@@ -101,17 +101,9 @@ jobs:
         with: 
           python-version: '3.10'
 
-      #--------------------------------------------------
-      # install python dependencies and check env still avaliable
+      # install python dependencies
       - name: install dependencies 
         run: |
-          echo "$GITHUB_CONTEXT"
-          echo ${{ env.aws_dev_ecr }}
-          echo ${{ env.CH_HOST }}
-          echo $env.aws_dev_ecr
-          echo $env.CH_HOST
-          echo $aws_dev_ecr
-          echo $CH_HOST
           python -m pip install --upgrade pip
           pip install -r data-transformation/dbt/requirements.txt
       
@@ -120,23 +112,14 @@ jobs:
         run: |
           cd data-transformation/dbt/traffic_monitor
           dbt deps
-
-      # # checkout to main 
-      # - name: checkout to main
-      #   uses: actions/checkout@v3
-      #   with:
-      #     ref: main
       
       # deploy dbt project
-      # dbt deps
-      # export $(cat .env | sed -e 's/[\r\n]//g')
-      # ls -a
-      # export $(cat .env | sed -e 's/[\r\n]//g')
       - name: deploy dbt project 
         run: | 
           cd data-transformation/dbt/traffic_monitor
           export CH_DB_SCHEMA=${{ env.CH_DB_SCHEMA }}
           export CH_DB_USER=${{ env.CH_DB_USER }}
           export CH_DB_PASSWORD=${{ env.CH_DB_PASSWORD }}
-          export CH_HOST=${{ env.CH_HOST }}       
+          export CH_HOST=${{ env.CH_HOST }} 
+          dbt deps      
           dbt run --target prod
