@@ -112,9 +112,13 @@ jobs:
       # deploy dbt project
       # dbt deps
       # export $(cat .env | sed -e 's/[\r\n]//g')
+      # ls -a
+      # export $(cat .env | sed -e 's/[\r\n]//g')
       - name: deploy dbt project 
         run: | 
-          ls -a
-          export $(cat .env | sed -e 's/[\r\n]//g')
-          cd data-transformation/dbt/traffic_monitor                     
+          cd data-transformation/dbt/traffic_monitor
+          export CH_DB_SCHEMA=${{ env.CH_DB_SCHEMA }}
+          export CH_DB_USER=${{ env.CH_DB_USER }}
+          export CH_DB_PASSWORD=${{ env.CH_DB_PASSWORD }}
+          export CH_HOST=${{ env.CH_HOST }}       
           dbt run --target prod
