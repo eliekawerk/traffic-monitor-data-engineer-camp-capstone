@@ -67,6 +67,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: data-ingestion/kafka/task-definition.prod.json
+          container-name: traffic-monitor-ecs-container
           image: ${{ env.aws_dev_ecr }}:${{ github.sha }}
 
       # configure your aws credentials
