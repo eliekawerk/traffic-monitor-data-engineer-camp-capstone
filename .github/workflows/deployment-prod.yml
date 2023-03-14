@@ -30,6 +30,7 @@ jobs:
           aws_secret_access_key: ${{ env.aws_secret_access_key }}
           aws_region: ${{ env.aws_region }}
 
+      # write s3 env to secrets
       - name: write to $github_env
         shell: bash
         run: cat .env | while read line || [[ -n $line ]]; do echo $line >> $GITHUB_ENV; done
