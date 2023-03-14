@@ -1,4 +1,4 @@
-name: integration2
+name: integration3
 #trigger on
 on:
   workflow_dispatch: 
