@@ -60,15 +60,15 @@ def run_producer():
         ccloud.create_topic(config, topic)
 
         # Set run end time
-        end_datetime = datetime.now() + timedelta(minutes=duration_in_minutes)
+        end_datetime = datetime.utcnow() + timedelta(hours=+8) + timedelta(minutes=duration_in_minutes)
 
         # Loop n times generating car objects simulating cars driving under a gantry
-        while datetime.now() < end_datetime:
+        while (datetime.utcnow() + timedelta(hours=+8)) < end_datetime:
 
-            hour = datetime.now().hour
+            hour = (datetime.utcnow() + timedelta(hours=+8)).hour
 
             # Weekday
-            if datetime.now().weekday() in [0,1,2,3,4]:
+            if (datetime.utcnow() + timedelta(hours=+8)).weekday() in [0,1,2,3,4]:
                 
                 match hour:                
                     case 0:
