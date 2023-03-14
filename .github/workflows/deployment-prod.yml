@@ -39,7 +39,7 @@ jobs:
       - name: login to aws ecr
         uses: docker/login-action@v2        
         with:
-          registry: ${{ env.aws_dev_ecr}}
+          registry: ${{ env.aws_traffic_monitor_ecr}}
           username: ${{ env.aws_access_key_id }}
           password: ${{ env.aws_secret_access_key }}
 
@@ -49,7 +49,7 @@ jobs:
         with:
           context: ./data-ingestion/kafka/
           push: true 
-          tags: ${{ env.aws_dev_ecr }}:${{ github.sha }}
+          tags: ${{ env.aws_traffic_monitor_ecr }}:${{ github.sha }}
 
   prod:
     needs: build
@@ -69,6 +69,7 @@ jobs:
           aws_secret_access_key: ${{ env.aws_secret_access_key }}
           aws_region: ${{ env.aws_region }}
 
+      # write s3 env to env
       - name: write to $github_env
         shell: bash
         run: cat .env | while read line || [[ -n $line ]]; do echo $line >> $GITHUB_ENV; done  
@@ -80,7 +81,7 @@ jobs:
         with:
           task-definition: data-ingestion/kafka/task-definition.prod.json
           container-name: traffic-monitor-ecs-container
-          image: ${{ env.aws_dev_ecr }}:${{ github.sha }}
+          image: ${{ env.aws_traffic_monitor_ecr}}:${{ github.sha }}
 
       # configure your aws credentials
       - name: configure aws credentials
@@ -108,6 +109,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r data-transformation/dbt/requirements.txt
       
+      # # run dbt
       - name: deploy dbt project 
         run: |          
           cd data-transformation/dbt/traffic_monitor         

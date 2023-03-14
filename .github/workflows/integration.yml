@@ -7,11 +7,12 @@ on:
 
 env:
   GH_REF: ${{ github.ref }}
-  
-
+  aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  aws_region: ${{ secrets.AWS_REGION }}
 
 jobs: 
-  build-traffic-monitor:  # your custom name
+  build:  # your custom name
     runs-on: ubuntu-latest
     steps: 
       # git checkout code to the machine
@@ -42,14 +43,18 @@ jobs:
           command: cp
           source: s3://traffic-monitor-env-s3-bucket/.env
           # destination:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION}}
-
-      # export env and run sqlfluff linting
+          aws_access_key_id: ${{ env.aws_access_key_id }}
+          aws_secret_access_key: ${{ env.aws_secret_access_key }}
+          aws_region: ${{ env.aws_region}}
+      
+      # write s3 env to env
+      - name: write to $github_env
+        shell: bash
+        run: cat .env | while read line || [[ -n $line ]]; do echo $line >> $GITHUB_ENV; done
+      
+      # run sqlfluff linting
       - name: sql linting
-        run: |
-          export $(cat .env | sed -e 's/[\r\n]//g')   
+        run: |           
           cd data-transformation/dbt
           sqlfluff lint traffic_monitor 
 
@@ -58,21 +63,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: main
-      
-      # read env file from s3 again
-      - uses: keithweaver/aws-s3-github-action@v1.0.0
-        with:
-          command: cp
-          source: s3://traffic-monitor-env-s3-bucket/.env
-          # destination:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION}}
 
       # generate dbt manifest.json
       - name: generate dbt manifest 
-        run: | 
-          export $(cat .env | sed -e 's/[\r\n]//g')  
+        run: |           
           cd data-transformation/dbt/traffic_monitor
           dbt deps
           dbt compile --target prod
@@ -94,24 +88,12 @@ jobs:
           name: manifest.json
           path: data-transformation/dbt/traffic_monitor
 
-      # read env file from s3 one last time
-      - uses: keithweaver/aws-s3-github-action@v1.0.0
-        with:
-          command: cp
-          source: s3://traffic-monitor-env-s3-bucket/.env
-          # destination:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws_region: ${{ secrets.AWS_REGION}}
-
       # dbt run and test
       # dbt run -m state:modified+1 --defer --state . --target ci
       # dbt test -m state:modified+1 --defer --state . --target ci
       - name: dbt run and test
-        run: | 
-          export $(cat .env | sed -e 's/[\r\n]//g')  
+        run: |           
           cd data-transformation/dbt/traffic_monitor
-          echo $CH_HOST
           dbt deps          
           dbt run --target ci
           dbt test --target ci
