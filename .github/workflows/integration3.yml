@@ -50,7 +50,7 @@ jobs:
       # write s3 env to secrets
       - name: write to $github_env
         shell: bash
-        run: cat .env | while read line || [[ -n $line ]]; do echo $line >> $GITHUB_ENV; done
+        run: cat .env | while read line || [[ -n $line ]]; do echo $line >> $GITHUB_SECRETS; done
       
       # run sqlfluff linting
       - name: sql linting
